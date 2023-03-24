@@ -1,0 +1,13 @@
+
+.quote{
+    margin: auto;
+    width: 100%;
+    max-width: 400px;
+    min-height: 180px;
+    padding: 30px;
+    border-radius: 4px;
+    box-shadow: 4px 4px 1px rgba(0, 0, 0, 0.5);
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+}
