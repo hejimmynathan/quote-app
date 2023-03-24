@@ -1,30 +1,37 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTwitter } from "@fortawesome/free-brands-svg-icons";
+type Quote = {
+  author: string;
+  text: string;
+};
+
 const arr = [
-  "bg-primary container-fluid flex min-vh-100 p-5 bg-gradient h-100 d-inline-block",
-  "bg-secondary container-fluid flex min-vh-100 p-5 bg-gradient h-100 d-inline-block",
-  "bg-success container-fluid flex min-vh-100 p-5 bg-gradient h-100 d-inline-block",
-  "bg-danger container-fluid flex min-vh-100 p-5 bg-gradient h-100 d-inline-block",
-  "bg-warning container-fluid flex min-vh-100 p-5 bg-gradient h-100 d-inline-block",
-  "bg-info container-fluid flex min-vh-100 p-5 bg-gradient h-100 d-inline-block",
-  "bg-light container-fluid flex min-vh-100 p-5 bg-gradient h-100 d-inline-block",
-  "bg-dark container-fluid flex min-vh-100 p-5 bg-gradient h-100 d-inline-block",
+  "bg-primary ",
+  "bg-secondary ",
+  "bg-success ",
+  "bg-danger",
+  "bg-warning",
+  "bg-info",
+  "bg-light",
+  "bg-dark",
 ];
 
 function App() {
-  const [quotes, setQuotes] = useState<string>("");
-  const [colors, setColors] = useState(arr[0]);
-  const textRef = useRef();
+  const [quotes, setQuotes] = useState<Quote>({ author: "", text: "" });
+  const [colors, setColors] = useState<string>(arr[0]);
+
   const getQuote = () => {
+    let randColor = Math.floor(Math.random() * arr.length);
+    setColors(arr[randColor]);
     fetch("https://type.fit/api/quotes")
       .then((res) => res.json())
       .then((data) => {
         let randomNum = Math.floor(Math.random() * data.length);
-        let randColor = Math.floor(Math.random() * arr.length);
         setQuotes(data[randomNum]);
-        setColors(arr[randColor]);
       });
   };
 
@@ -32,32 +39,38 @@ function App() {
     getQuote();
   }, []);
 
-  return (
-    <div id="quote-box" className={colors}>
-      <div className=" card text-center bg-secondary ">
-        <h4 className="card-header">Random Quotes App</h4>
-        <div className="card shadow ">
-          <div id="text" className="card-body">
-            {quotes.text}
-            <h6 id="author">Author: {quotes.author}</h6>
+  const tweetQuote = () => {
+    let url = `https://twitter.com/intent/tweet?text=${quotes.text}`;
+    window.open(url, "_blank");
+  };
 
+  return (
+    <div
+      id="quote-box"
+      className={`container-fluid min-vh-100 p-5 bg-gradient vw-100 d-inline-block ${colors}`}
+    >
+      <div className={`h-50 mw-50 m-5 card p-1 text-center ${colors}`}>
+        <h4 className="card-header">Random Quotes App</h4>
+        <div className="card shadow">
+          <div id="text" className="card-body">
+            "{quotes.text}"{" "}
+            <h6 id="author">Author: {quotes.author || "Unknown"}</h6>
             <div className="container">
               <button
                 id="new-quote"
                 onClick={getQuote}
-                className="m-1 btn btn-primary"
+                className={`m-1 btn ${colors}`}
               >
                 Get Quote
               </button>
-              <a
+
+              <button
                 id="tweet-quote"
-                href={`https://twitter.com/intent/tweet?text=${quotes.text}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-secondary m-1"
+                onClick={tweetQuote}
+                className={`btn m-2 ${colors}`}
               >
-                Tweet
-              </a>
+                <FontAwesomeIcon icon={faTwitter} />
+              </button>
             </div>
           </div>
         </div>
